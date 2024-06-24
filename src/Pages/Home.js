@@ -1,16 +1,16 @@
+import '../App.css';
+import { Link } from 'react-router-dom';
+import BigButtonLink from '../Components/BigButtonLink';
 import BigButton from '../Components/BigButton';
-import Board from '../Components/Board';
-import { Button, Box } from '@mui/material';
 
 function Home() {
 
     return (
         <div className='home'>
-            <BigButton text="Human vs. Human" />
-            <BigButton text="Human vs. Computer" />
-            <BigButton text="Openings" />
-            <BigButton text="Tactics" />
-            <BigButton text="Endgames" />
+            <BigButtonLink text="Home" to={'/'} />
+            <BigButtonLink text="Openings" to='/openings' />
+            <BigButtonLink text="Tactics" to={'/tactics'} />
+            <BigButtonLink text="Endgames" to={'/endgames'} />
         </div>
     );
 }
