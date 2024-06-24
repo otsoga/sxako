@@ -4,7 +4,7 @@ function Openings() {
 
     return (
         <div>
-            <h1>Endgames</h1>
+            <h1>Openings</h1>
         </div>
     );
 }
