@@ -18,6 +18,8 @@ function App() {
         const possibleMove = game.moves();
 
         if (game.game_over() || game.in_draw() || possibleMove.length === 0) {
+            console.log('Game over');
+            console.log(game);
             return;
         }
 
