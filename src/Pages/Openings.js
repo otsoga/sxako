@@ -22,17 +22,12 @@ function Openings() {
         if (move == null) {
             return false
         }
+
         setFen(gameRef.current.fen())
 
         // make the computer move
         setTimeout(makeRandomMove, 200);
         return true;
-    }
-
-    const makeMove = (modify) => {
-        console.log(modify)
-        gameRef.current = modify(...gameRef.current)
-        setFen(gameRef.current.fen())
     }
 
     const undoMove = () => {
