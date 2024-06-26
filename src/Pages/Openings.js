@@ -46,6 +46,11 @@ function Openings() {
         setFen(game.fen())
     }
 
+    const resetGame = () => {
+        game.reset();
+        setFen(game.fen())
+    };
+
     const makeRandomMove = () =>{
         const possibleMoves = game.moves();
         console.log('possibleMoves', possibleMoves)
@@ -58,11 +63,6 @@ function Openings() {
             game.move(getRandomElement(possibleMoves));
         })
     }
-
-    const resetGame = () => {
-        game.reset();
-        setFen(game.fen())
-    };
 
     return (
         <div className='app'>

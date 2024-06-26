@@ -5,7 +5,6 @@ import { Chess } from 'chess.js'
 
 function Board() {
     const [game, setGame] = useState(new Chess());
-    const [boardChanged, setBoardChanged] = useState(false);
 
     const makeMove= (modify) => {
         setGame((game) => {
@@ -13,11 +12,6 @@ function Board() {
             modify(update)
             return update;
         })
-    }
-
-    const handleBoardChanged = () => {
-        setBoardChanged(true);
-        setBoardChanged(false);
     }
 
     const makeRandomMove = () =>{
