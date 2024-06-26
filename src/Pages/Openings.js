@@ -1,67 +1,60 @@
 import { Box, Button } from '@mui/material';
 import SolidBoard from '../Components/SolidBoard';
 import { Chess } from 'chess.js'
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { getRandomElement } from '../utils';
 
-const game = new Chess();
 
 function Openings() {
-    const [game, setGame] = useState(new Chess());
-    const [fen, setFen] = useState(game.fen());
+    const gameRef = useRef(new Chess());
+    const [fen, setFen] = useState(gameRef.current.fen());
 
     const onHumanMove = (source, target) => {
         let move = null;
-        makeMove((game) => {
-            move = game.move({
-                from: source,
-                to: target,
-                promotion: getRandomElement(['q', 'r', 'b', 'n'])
-            })
+        console.log(gameRef.current)
+        move = gameRef.current.move({
+            from: source,
+            to: target,
+            promotion: getRandomElement(['q', 'r', 'b', 'n'])
         })
 
 
         if (move == null) {
             return false
         }
+        setFen(gameRef.current.fen())
 
         // make the computer move
-        // setTimeout(makeRandomMove, 200);
+        setTimeout(makeRandomMove, 200);
         return true;
     }
 
     const makeMove = (modify) => {
         console.log(modify)
-        setGame((game) => {
-            const update = { ...game };
-            modify(update)
-            return update;
-        })
-
-        setFen(game.fen())
+        gameRef.current = modify(...gameRef.current)
+        setFen(gameRef.current.fen())
     }
 
     const undoMove = () => {
-        game.undo()
-        setFen(game.fen())
+        gameRef.current.undo()
+        setFen(gameRef.current.fen())
     }
 
     const resetGame = () => {
-        game.reset();
-        setFen(game.fen())
+        gameRef.current.reset();
+        setFen(gameRef.current.fen())
     };
 
     const makeRandomMove = () =>{
-        const possibleMoves = game.moves();
+        const possibleMoves = gameRef.current.moves();
         console.log('possibleMoves', possibleMoves)
 
-        if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
+        if (gameRef.current.game_over() || gameRef.current.in_draw() || possibleMoves.length === 0) {
             return;
         }
 
-        makeMove((game) => {
-            game.move(getRandomElement(possibleMoves));
-        })
+        gameRef.current.move(getRandomElement(possibleMoves));
+        setFen(gameRef.current.fen())
     }
 
     return (
@@ -87,7 +80,7 @@ function Openings() {
             > {'>'}
             </Button>
             <Box>
-                {game.pgn()}
+                {gameRef.current.pgn()}
             </Box>
         </div>
     );
