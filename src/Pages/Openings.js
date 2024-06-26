@@ -1,10 +1,14 @@
+import { Box, Button } from '@mui/material';
 import SolidBoard from '../Components/SolidBoard';
 import { Chess } from 'chess.js'
 import { useState } from 'react';
+import { getRandomElement } from '../utils';
 
+const game = new Chess();
 
 function Openings() {
     const [game, setGame] = useState(new Chess());
+    const [fen, setFen] = useState(game.fen());
 
     const onHumanMove = (source, target) => {
         let move = null;
@@ -16,21 +20,30 @@ function Openings() {
             })
         })
 
+
         if (move == null) {
             return false
         }
 
         // make the computer move
-        setTimeout(makeRandomMove, 200);
+        // setTimeout(makeRandomMove, 200);
         return true;
     }
 
     const makeMove = (modify) => {
+        console.log(modify)
         setGame((game) => {
             const update = { ...game };
             modify(update)
             return update;
         })
+
+        setFen(game.fen())
+    }
+
+    const undoMove = () => {
+        game.undo()
+        setFen(game.fen())
     }
 
     const makeRandomMove = () =>{
@@ -38,8 +51,6 @@ function Openings() {
         console.log('possibleMoves', possibleMoves)
 
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
-            console.log('Game over');
-            console.log(game);
             return;
         }
 
@@ -48,15 +59,36 @@ function Openings() {
         })
     }
 
-    const getRandomElement = (array) => array[Math.floor(Math.random() * array.length)];
+    const resetGame = () => {
+        game.reset();
+        setFen(game.fen())
+    };
 
     return (
         <div className='app'>
             <h1>Openings</h1>
-            <SolidBoard 
-                position={game}
-                onDrop={onHumanMove}
-            />
+            <Box sx={{flexDirection:'row'}}>
+                    <SolidBoard 
+                        position={fen}
+                        onDrop={onHumanMove}
+                    />
+            </Box>
+
+            <Button
+                variant='contained'
+                onClick={resetGame}>Reset Board</Button>
+            <Button
+                variant='contained'
+                onClick={undoMove}
+            > {'<'}
+            </Button>
+            <Button
+                variant='contained'
+            > {'>'}
+            </Button>
+            <Box>
+                {game.pgn()}
+            </Box>
         </div>
     );
 }

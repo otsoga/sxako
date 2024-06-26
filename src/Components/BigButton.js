@@ -7,7 +7,12 @@ function BigButton({text}) {
                 marginBottom={4}
                 text={text}
             >
-                <Button className="menuButton" variant="contained" color="primary"> {text}
+                <Button 
+                    className="menuButton"
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                > {text}
                 </Button>
             </Box>
     );

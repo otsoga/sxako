@@ -1,14 +1,16 @@
 import '../App.css';
 import BigButtonLink from '../Components/BigButtonLink';
+import { Box } from '@mui/system';
 
 function Home() {
 
     return (
-        <div className='home'>
+        <Box className='home'>
+            <h1>Sxako</h1>
             <BigButtonLink text="Openings" to='/openings' />
             <BigButtonLink text="Tactics" to={'/tactics'} />
             <BigButtonLink text="Endgames" to={'/endgames'} />
-        </div>
+        </Box>
     );
 }
 
