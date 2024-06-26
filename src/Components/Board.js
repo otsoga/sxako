@@ -41,6 +41,7 @@ function Board() {
         if (move == null) {
             return false
         }
+        console.log(move)
 
         // make the computer move
         setTimeout(makeRandomMove, 200);
@@ -50,7 +51,7 @@ function Board() {
     const getRandomElement = (array) => array[Math.floor(Math.random() * array.length)];
 
     return (
-        <div className="app">
+        <div className="board">
             <Chessboard
                 position={game.fen()}
                 onPieceDrop={onDrop}

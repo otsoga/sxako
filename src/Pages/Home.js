@@ -1,7 +1,5 @@
 import '../App.css';
-import { Link } from 'react-router-dom';
 import BigButtonLink from '../Components/BigButtonLink';
-import BigButton from '../Components/BigButton';
 
 function Home() {
 

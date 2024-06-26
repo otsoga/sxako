@@ -5,6 +5,7 @@ function Endgames() {
     return (
         <div>
             <h1>Endgames</h1>
+            <Board />
         </div>
     );
 }
