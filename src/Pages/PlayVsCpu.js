@@ -11,7 +11,6 @@ function PlayVsCpu() {
 
     const onHumanMove = (source, target) => {
         let move = null;
-        console.log(gameRef.current)
         move = gameRef.current.move({
             from: source,
             to: target,
@@ -54,22 +53,24 @@ function PlayVsCpu() {
     return (
         <div className='app'>
             <h1>Play vs. CPU</h1>
-            <Box sx={{flexDirection:'row', marginBottom: '1rem'}}>
+            <Box sx={{marginBottom: '1rem'}}>
                 <SolidBoard 
                     position={fen}
                     onDrop={onHumanMove}
                 />
             </Box>
-            <Button
-                variant='contained'
-                sx={{marginRight: '1rem'}}
-                onClick={undoMove}
-            > {'<'}
-            </Button>
-            <Button
-                variant='contained'
-                onClick={resetGame}>New Game
-            </Button>
+            <Box sx={{marginBottom: '1rem'}}>
+                <Button
+                    variant='contained'
+                    sx={{marginRight: '1rem'}}
+                    onClick={undoMove}
+                > {'<'}
+                </Button>
+                <Button
+                    variant='contained'
+                    onClick={resetGame}>New Game
+                </Button>
+            </Box>
             <Box>
                 {gameRef.current.pgn()}
             </Box>
