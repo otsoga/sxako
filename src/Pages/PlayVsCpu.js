@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 import { getRandomElement } from '../utils';
 
 
-function Openings() {
+function PlayVsCpu() {
     const gameRef = useRef(new Chess());
     const [fen, setFen] = useState(gameRef.current.fen());
 
@@ -17,7 +17,6 @@ function Openings() {
             to: target,
             promotion: getRandomElement(['q', 'r', 'b', 'n'])
         })
-
 
         if (move == null) {
             return false
@@ -54,9 +53,28 @@ function Openings() {
 
     return (
         <div className='app'>
-            <h1>Openings</h1>
+            <h1>Play vs. CPU</h1>
+            <Box sx={{flexDirection:'row', marginBottom: '1rem'}}>
+                <SolidBoard 
+                    position={fen}
+                    onDrop={onHumanMove}
+                />
+            </Box>
+            <Button
+                variant='contained'
+                sx={{marginRight: '1rem'}}
+                onClick={undoMove}
+            > {'<'}
+            </Button>
+            <Button
+                variant='contained'
+                onClick={resetGame}>New Game
+            </Button>
+            <Box>
+                {gameRef.current.pgn()}
+            </Box>
         </div>
     );
 }
 
-export default Openings;
+export default PlayVsCpu;
