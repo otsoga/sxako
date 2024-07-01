@@ -3,6 +3,7 @@ import Board from '../Components/Board';
 import { Chess } from 'chess.js'
 import { useState, useRef } from 'react';
 import { getRandomElement } from '../utils';
+import MoveList from '../Components/MoveList';
 
 
 function PlayVsCpu() {
@@ -48,30 +49,51 @@ function PlayVsCpu() {
         setFen(gameRef.current.fen())
     }
 
+    // const convertPgnMovesToArray = (pgnMoves) => {
+    //     const moves = pgnMoves.split(' ').reverse();
+    //     let movesArray = [];
+    //     console.log('moves', moves);
+    //     console.log('moves before popping', moves.slice().reverse());
+    //     while (moves[0] !== '') {
+    //             // console.log('in while loop')
+    //     let moveLine = []
+    //         moveLine.push(moves.pop());
+    //         moveLine.push(moves.pop());
+    //         moveLine.push(moves.pop());
+    //     }
+    // }
+
     return (
         <div className='app'>
             <h1>Play vs. CPU</h1>
-            <Box sx={{marginBottom: '1rem'}}>
-                <Board 
-                    position={fen}
-                    onDrop={onHumanMove}
-                />
+            <Box style={{ display: 'flex', gap: '1rem' }}>
+                <Box id='boardView' sx={{width:'50%'}} >
+                    <Box sx={{marginBottom: '1rem'}}>
+                        <Board 
+                            position={fen}
+                            onDrop={onHumanMove}
+                        />
+                    </Box>
+                    <Box sx={{marginBottom: '1rem'}}>
+                        <Button
+                            variant='contained'
+                            sx={{marginRight: '1rem'}}
+                            onClick={undoMove}
+                        > {'<'}
+                        </Button>
+                        <Button
+                            variant='contained'
+                            onClick={resetGame}>New Game
+                        </Button>
+                    </Box>
+                </Box>
+                <Box>
+                    {gameRef.current.pgn()}
+                </Box>
+                {/* <MoveList movesString={convertPgnMovesToArray(gameRef.current.fen())} /> */}
+                <MoveList movesString={gameRef.current.pgn()} />
             </Box>
-            <Box sx={{marginBottom: '1rem'}}>
-                <Button
-                    variant='contained'
-                    sx={{marginRight: '1rem'}}
-                    onClick={undoMove}
-                > {'<'}
-                </Button>
-                <Button
-                    variant='contained'
-                    onClick={resetGame}>New Game
-                </Button>
-            </Box>
-            <Box>
-                {gameRef.current.pgn()}
-            </Box>
+
         </div>
     );
 }
