@@ -1,5 +1,5 @@
 import { Box, Button } from '@mui/material';
-import SolidBoard from '../Components/SolidBoard';
+import Board from '../Components/Board';
 import { Chess } from 'chess.js'
 import { useState, useRef } from 'react';
 import { getRandomElement } from '../utils';
@@ -52,7 +52,7 @@ function PlayVsCpu() {
         <div className='app'>
             <h1>Play vs. CPU</h1>
             <Box sx={{marginBottom: '1rem'}}>
-                <SolidBoard 
+                <Board 
                     position={fen}
                     onDrop={onHumanMove}
                 />

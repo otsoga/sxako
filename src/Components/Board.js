@@ -1,7 +1,7 @@
 import '../App.css';
 import { Chessboard } from 'react-chessboard'
 
-function SolidBoard({position, onDrop}) {
+function Board({position, onDrop}) {
 
     return (
         <Chessboard
@@ -11,4 +11,4 @@ function SolidBoard({position, onDrop}) {
     );
 }
 
-export default SolidBoard;
+export default Board;
