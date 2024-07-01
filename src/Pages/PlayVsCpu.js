@@ -5,7 +5,6 @@ import { useState, useRef } from 'react';
 import { getRandomElement } from '../utils';
 import MoveList from '../Components/MoveList';
 
-
 function PlayVsCpu() {
     const gameRef = useRef(new Chess());
     const [fen, setFen] = useState(gameRef.current.fen());
@@ -49,20 +48,6 @@ function PlayVsCpu() {
         setFen(gameRef.current.fen())
     }
 
-    // const convertPgnMovesToArray = (pgnMoves) => {
-    //     const moves = pgnMoves.split(' ').reverse();
-    //     let movesArray = [];
-    //     console.log('moves', moves);
-    //     console.log('moves before popping', moves.slice().reverse());
-    //     while (moves[0] !== '') {
-    //             // console.log('in while loop')
-    //     let moveLine = []
-    //         moveLine.push(moves.pop());
-    //         moveLine.push(moves.pop());
-    //         moveLine.push(moves.pop());
-    //     }
-    // }
-
     return (
         <div className='app'>
             <h1>Play vs. CPU</h1>
@@ -90,7 +75,6 @@ function PlayVsCpu() {
                 <Box>
                     {gameRef.current.pgn()}
                 </Box>
-                {/* <MoveList movesString={convertPgnMovesToArray(gameRef.current.fen())} /> */}
                 <MoveList movesString={gameRef.current.pgn()} />
             </Box>
 
