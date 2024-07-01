@@ -22,9 +22,8 @@ function PlayVsCpu() {
         }
 
         setFen(gameRef.current.fen())
-
-        // make the computer move
         setTimeout(makeRandomMove, 200);
+        
         return true;
     }
 
@@ -40,7 +39,6 @@ function PlayVsCpu() {
 
     const makeRandomMove = () =>{
         const possibleMoves = gameRef.current.moves();
-        console.log('possibleMoves', possibleMoves)
 
         if (gameRef.current.game_over() || gameRef.current.in_draw() || possibleMoves.length === 0) {
             return;

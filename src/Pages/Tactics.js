@@ -1,9 +1,9 @@
-import Board from '../Components/Board';
-
 function Tactics() {
 
     return (
-        <Board />
+        <div className='app'>
+            <h1>Tactics</h1>
+        </div>
     );
 }
 

@@ -1,11 +1,7 @@
-import Board from '../Components/Board';
-
 function Endgames() {
-
     return (
-        <div>
+        <div className='app'>
             <h1>Endgames</h1>
-            <Board />
         </div>
     );
 }

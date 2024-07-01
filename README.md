@@ -1,2 +1,7 @@
+#### Frequently used commands
+- `npm start`
+
 #### TO DO
-- Stockfish integration
+- move movelist to side of the board
+- Added end of text on screen
+- Backend Integration
