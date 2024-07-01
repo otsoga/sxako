@@ -51,7 +51,7 @@ function PlayVsCpu() {
     return (
         <div className='app'>
             <h1>Play vs. CPU</h1>
-            <Box style={{ display: 'flex', gap: '1rem' }}>
+            <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Box id='boardView' sx={{width:'50%'}} >
                     <Box sx={{marginBottom: '1rem'}}>
                         <Board 
