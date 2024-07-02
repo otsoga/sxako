@@ -1,13 +1,15 @@
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import Board from '../Components/Board';
 import { Chess } from 'chess.js'
 import { useState, useRef } from 'react';
 import { getRandomElement } from '../utils';
 import MoveList from '../Components/MoveList';
+import GameNavigation from '../Components/GameNavigation';
 
 function PlayVsCpu() {
     const gameRef = useRef(new Chess());
     const [fen, setFen] = useState(gameRef.current.fen());
+    const [boardOrientation, setBoardOrientation] = useState('white');
 
     const onHumanMove = (source, target) => {
         let move = null;
@@ -27,16 +29,6 @@ function PlayVsCpu() {
         return true;
     }
 
-    const undoMove = () => {
-        gameRef.current.undo()
-        setFen(gameRef.current.fen())
-    }
-
-    const resetGame = () => {
-        gameRef.current.reset();
-        setFen(gameRef.current.fen())
-    };
-
     const makeRandomMove = () =>{
         const possibleMoves = gameRef.current.moves();
 
@@ -48,32 +40,37 @@ function PlayVsCpu() {
         setFen(gameRef.current.fen())
     }
 
+    const undoMove = () => {
+        gameRef.current.undo()
+        setFen(gameRef.current.fen())
+    }
+
+    const resetGame = () => {
+        gameRef.current.reset();
+        setFen(gameRef.current.fen())
+    };
+
+    const flipBoard = () => {
+        boardOrientation === 'white' ? setBoardOrientation('black') : setBoardOrientation('white')
+    }
+
     return (
         <div className='app'>
             <h1>Play vs. CPU</h1>
             <Box sx={{ display: 'flex', gap: '1rem' }}>
-                <Box id='boardView' sx={{width:'50%'}} >
+                <Box id='boardView' sx={{minWidth: '560px', width:'50%'}} >
                     <Box sx={{marginBottom: '1rem'}}>
                         <Board 
                             position={fen}
                             onDrop={onHumanMove}
+                            boardOrientation={boardOrientation}
                         />
                     </Box>
-                    <Box sx={{marginBottom: '1rem'}}>
-                        <Button
-                            variant='contained'
-                            sx={{marginRight: '1rem'}}
-                            onClick={undoMove}
-                        > {'<'}
-                        </Button>
-                        <Button
-                            variant='contained'
-                            onClick={resetGame}>New Game
-                        </Button>
-                    </Box>
-                </Box>
-                <Box>
-                    {gameRef.current.pgn()}
+                    <GameNavigation 
+                        onUndoMove={undoMove}
+                        onResetGame={resetGame}
+                        onFlipBoard={flipBoard}
+                    />
                 </Box>
                 <MoveList movesString={gameRef.current.pgn()} />
             </Box>

@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { Fragment } from "react";
 
 /**
  * Processes a string of moves and returns an array of arrays of moves
@@ -10,22 +11,20 @@ function MoveList({movesString}) {
     let movesArray = [];
 
     while (moves[0]) {
-        console.log('moves', moves[0]);
-        let moveLine = []
-        moveLine.push(moves.pop());
-        moveLine.push(moves.pop());
-
-        if (moves[0]) {
-            moveLine.push(moves.pop());
-        }
-
-        movesArray.push(moveLine);
-        console.log('moves Array', movesArray);
+        movesArray.push({
+            moveNumber: moves.pop(),
+            whiteMove: moves.pop(),
+            blackMove: moves.pop() || ''
+        });
     }
 
     return (
-        <Box>
-
+        <Box sx={{minWidth: '100px'}}>
+            {movesArray.map((moveLine, index) =>
+                <Fragment key={index}>
+                    <p>{moveLine.moveNumber} {moveLine.whiteMove} {moveLine.blackMove}</p>
+                </Fragment>                
+            )}
         </Box>
     );
 }
