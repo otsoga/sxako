@@ -5,11 +5,13 @@ import { useState, useRef } from 'react';
 import { getRandomElement } from '../utils';
 import MoveList from '../Components/MoveList';
 import GameNavigation from '../Components/GameNavigation';
+import EndOfGameModal from '../Components/EndOfGameModal';
 
 function PlayVsCpu() {
     const gameRef = useRef(new Chess());
     const [fen, setFen] = useState(gameRef.current.fen());
     const [boardOrientation, setBoardOrientation] = useState('white');
+    const [modalOpen, setModalOpen] = useState(false);
 
     const onHumanMove = (source, target) => {
         let move = null;
@@ -58,10 +60,20 @@ function PlayVsCpu() {
         navigator.clipboard.writeText(gameRef.current.fen())
     }
 
+    const toggleModal = () => {
+        console.log('trying to toggle modal')
+        setModalOpen(!modalOpen)
+    }
+
     return (
         <div className='app'>
+            <EndOfGameModal
+                open={modalOpen}
+                onClose={toggleModal} 
+            />
             <h1>Play vs. CPU</h1>
             <Box sx={{ display: 'flex', gap: '1rem' }}>
+                
                 <Box id='boardView' sx={{minWidth: '560px', width:'50%'}} >
                     <Box sx={{marginBottom: '1rem'}}>
                         <Board 
@@ -75,6 +87,7 @@ function PlayVsCpu() {
                         onResetGame={resetGame}
                         onFlipBoard={flipBoard}
                         onCopyFen={copyFen}
+                        onToggleModal={toggleModal}
                     />
                 </Box>
                 <MoveList movesString={gameRef.current.pgn()} />
