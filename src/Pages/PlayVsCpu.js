@@ -54,6 +54,10 @@ function PlayVsCpu() {
         boardOrientation === 'white' ? setBoardOrientation('black') : setBoardOrientation('white')
     }
 
+    const copyFen = () => {
+        navigator.clipboard.writeText(gameRef.current.fen())
+    }
+
     return (
         <div className='app'>
             <h1>Play vs. CPU</h1>
@@ -70,6 +74,7 @@ function PlayVsCpu() {
                         onUndoMove={undoMove}
                         onResetGame={resetGame}
                         onFlipBoard={flipBoard}
+                        onCopyFen={copyFen}
                     />
                 </Box>
                 <MoveList movesString={gameRef.current.pgn()} />

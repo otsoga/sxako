@@ -1,6 +1,6 @@
 import { Box, Button } from '@mui/material';
 
-function GameNavigation({onUndoMove, onResetGame, onFlipBoard}) {
+function GameNavigation({onUndoMove, onResetGame, onFlipBoard, onCopyFen}) {
 
     return (
         <Box sx={{marginBottom: '1rem'}}>
@@ -17,8 +17,15 @@ function GameNavigation({onUndoMove, onResetGame, onFlipBoard}) {
             </Button>
             <Button
                 variant='contained'
+                sx={{marginRight: '1rem'}}
                 onClick={onFlipBoard}>Flip Board
             </Button>
+            <Button
+                variant='contained'
+                sx={{marginRight: '1rem'}}
+                onClick={onCopyFen}>Copy FEN
+            </Button>
+
         </Box>
     );
 }

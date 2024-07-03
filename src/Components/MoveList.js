@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { Fragment } from "react";
 
 /**
- * Processes a string of moves and returns an array of arrays of moves
+ * Processes a string of moves and returns an array of move objects
  * @param {String} movesString 
  * @returns 
  */
@@ -19,7 +19,7 @@ function MoveList({movesString}) {
     }
 
     return (
-        <Box sx={{minWidth: '100px'}}>
+        <Box sx={{minWidth: '115px'}}>
             {movesArray.map((moveLine, index) =>
                 <Fragment key={index}>
                     <p>{moveLine.moveNumber} {moveLine.whiteMove} {moveLine.blackMove}</p>
