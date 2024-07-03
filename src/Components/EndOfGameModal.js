@@ -1,6 +1,6 @@
 import { Button, Box, Dialog } from '@mui/material';
 
-function EndOfGameModal({open, onClose}) {
+function EndOfGameModal({open, onClose, gameOver}) {
 
     return (
         <Dialog
@@ -8,7 +8,11 @@ function EndOfGameModal({open, onClose}) {
             onClose={onClose}
         >
             <Box>
-                <h1>This is a modal for ya</h1>
+                <h1>{gameOver}</h1>
+                <Button
+                    variant='contained'
+                    onClick={onClose}
+                >Close</Button>
             </Box>
         </Dialog>
     );

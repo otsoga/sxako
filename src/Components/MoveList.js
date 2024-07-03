@@ -7,6 +7,8 @@ import { Fragment } from "react";
  * @returns 
  */
 function MoveList({movesString}) {
+    const stripBrackets = (text) => text.replace(/(?:\[.*?\]|[[\]])/g, "")
+    movesString = stripBrackets(movesString);
     const moves = movesString.split(' ').reverse();
     let movesArray = [];
 

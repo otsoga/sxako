@@ -8,10 +8,13 @@ import GameNavigation from '../Components/GameNavigation';
 import EndOfGameModal from '../Components/EndOfGameModal';
 
 function PlayVsCpu() {
-    const gameRef = useRef(new Chess());
+    // const gameRef = useRef(new Chess());
+    const gameRef = useRef(new Chess('rnbqkbnr/1pp2ppp/p2p4/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 4'));
+
     const [fen, setFen] = useState(gameRef.current.fen());
     const [boardOrientation, setBoardOrientation] = useState('white');
     const [modalOpen, setModalOpen] = useState(false);
+    const [gameOver, setGameOver] = useState(false);
 
     const onHumanMove = (source, target) => {
         let move = null;
@@ -26,20 +29,32 @@ function PlayVsCpu() {
         }
 
         setFen(gameRef.current.fen())
-        setTimeout(makeRandomMove, 200);
+        // setTimeout(makeRandomMove, 200); // Comment this out for human vs. human
         
+        if (gameRef.current.game_over()) {
+            handleEndOfGame()
+            return;
+        }
+
         return true;
     }
 
     const makeRandomMove = () =>{
         const possibleMoves = gameRef.current.moves();
-
-        if (gameRef.current.game_over() || gameRef.current.in_draw() || possibleMoves.length === 0) {
-            return;
-        }
-
         gameRef.current.move(getRandomElement(possibleMoves));
         setFen(gameRef.current.fen())
+
+        if (gameRef.current.game_over()) {
+            handleEndOfGame()
+            return;
+        }
+    }
+
+    const handleEndOfGame = () => {
+        if (gameRef.current.in_checkmate()) {
+            setGameOver('wins by checkmate!')
+            toggleModal()
+        }
     }
 
     const undoMove = () => {
@@ -69,11 +84,11 @@ function PlayVsCpu() {
         <div className='app'>
             <EndOfGameModal
                 open={modalOpen}
+                gameOver={gameOver}
                 onClose={toggleModal} 
             />
             <h1>Play vs. CPU</h1>
             <Box sx={{ display: 'flex', gap: '1rem' }}>
-                
                 <Box id='boardView' sx={{minWidth: '560px', width:'50%'}} >
                     <Box sx={{marginBottom: '1rem'}}>
                         <Board 
