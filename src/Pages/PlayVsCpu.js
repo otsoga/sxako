@@ -9,7 +9,10 @@ import EndOfGameModal from '../Components/EndOfGameModal';
 
 function PlayVsCpu() {
     // const gameRef = useRef(new Chess());
-    const gameRef = useRef(new Chess('rnbqkbnr/1pp2ppp/p2p4/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 4'));
+    // const gameRef = useRef(new Chess('7k/8/8/8/5Q2/4P3/PPPP1PPP/RNB1KBNR w KQ - 5 4')); // For testing checkmate
+    // const gameRef = useRef(new Chess('7k/8/8/8/5Q2/4P3/PPPP1PPP/RNB1KBNR w KQ - 5 4')); // For testing stalemate
+    const gameRef = useRef(new Chess('7k/8/8/8/8/8/8/4KBN1 w KQ - 5 4')); // For testing insufficient material
+
 
     const [fen, setFen] = useState(gameRef.current.fen());
     const [boardOrientation, setBoardOrientation] = useState('white');
@@ -52,7 +55,21 @@ function PlayVsCpu() {
 
     const handleEndOfGame = () => {
         if (gameRef.current.in_checkmate()) {
-            setGameOver('wins by checkmate!')
+            console.log(gameRef.current.turn())
+            let winner = gameRef.current.turn() === 'w' ? 'Black' : 'White'
+            setGameOver(winner + ' wins by checkmate!')
+            toggleModal()
+        } else if (gameRef.current.in_stalemate()) {   
+            setGameOver('Game drawn by stalemate!')
+            toggleModal()
+        } else if (gameRef.current.in_threefold_repetition()) {
+            setGameOver('Game drawn by threefold repetition!')
+            toggleModal()
+        } else if (gameRef.current.insufficient_material()) {
+            setGameOver('Game drawn by insufficient material!')
+            toggleModal()
+        } else if (gameRef.current.in_draw()) {
+            setGameOver('Game drawn by fifty-move rule!')
             toggleModal()
         }
     }
