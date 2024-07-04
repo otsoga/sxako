@@ -1,15 +1,30 @@
 import { Box } from '@mui/material';
 import Board from '../Components/Board';
 import { Chess } from 'chess.js'
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
 import { getRandomElement } from '../utils';
 import MoveList from '../Components/MoveList';
 import EndOfGameModal from '../Components/EndOfGameModal';
 import PuzzleNavigation from '../Components/PuzzleNavigation';
 
 function Tactics() {
-    const gameRef = useRef(new Chess());
+    const gameRef = useRef(new Chess('8/8/8/8/8/8/8/8'));
     const [fen, setFen] = useState(gameRef.current.fen());
+
+    useEffect(() => {
+        axios.get('http://127.0.0.1:8000/api/v1/tactics/puzzles')
+          .then(response => {
+            gameRef.current = new Chess(response.data.fen);
+            // might need to do something about board orientation
+            setFen(gameRef.current.fen())
+
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }, []);
+
     const [boardOrientation, setBoardOrientation] = useState('white');
     const [modalOpen, setModalOpen] = useState(false);
     const [gameOver, setGameOver] = useState(false);
