@@ -8,9 +8,9 @@ function Home() {
         <Box className='home'>
             <h1>Sxako</h1>
             <BigButtonLink text="Play vs. CPU" to='/play-vs-cpu' />
-            {/* <BigButtonLink text="Openings" to='/openings' />
+            {/* <BigButtonLink text="Openings" to='/openings' /> */}
             <BigButtonLink text="Tactics" to={'/tactics'} />
-            <BigButtonLink text="Endgames" to={'/endgames'} /> */}
+            {/* <BigButtonLink text="Endgames" to={'/endgames'} /> */}
         </Box>
     );
 }

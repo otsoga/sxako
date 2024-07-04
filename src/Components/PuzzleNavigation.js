@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import GameNavigationButton from './GameNavigationButton';
 
-function GameNavigation({onUndoMove, onResetGame, onFlipBoard, onCopyFen, onToggleModal, onDownloadPgn}) {
+function PuzzleNavigation({onUndoMove, onResetGame, onFlipBoard, onCopyFen, onToggleModal}) {
 
     return (
         <Box>
@@ -10,9 +10,13 @@ function GameNavigation({onUndoMove, onResetGame, onFlipBoard, onCopyFen, onTogg
                 onClick={onUndoMove}>
             </GameNavigationButton>
             <GameNavigationButton
+                text={'>'}
+                onClick={onUndoMove}>
+            </GameNavigationButton>
+            {/* <GameNavigationButton
                 text={'New Game'}
                 onClick={onResetGame}>
-            </GameNavigationButton>
+            </GameNavigationButton> */}
             <GameNavigationButton
                 text={'Flip Board'}
                 onClick={onFlipBoard}>
@@ -21,10 +25,10 @@ function GameNavigation({onUndoMove, onResetGame, onFlipBoard, onCopyFen, onTogg
                 text={'Copy FEN'}
                 onClick={onCopyFen}>
             </GameNavigationButton>
-            <GameNavigationButton
+            {/* <GameNavigationButton
                 text={'Download PGN'}
                 onClick={onDownloadPgn}>
-            </GameNavigationButton>
+            </GameNavigationButton> */}
             <GameNavigationButton
                 text={'Toggle Modal'}
                 onClick={onToggleModal}>
@@ -33,4 +37,4 @@ function GameNavigation({onUndoMove, onResetGame, onFlipBoard, onCopyFen, onTogg
     );
 }
 
-export default GameNavigation;
+export default PuzzleNavigation;
