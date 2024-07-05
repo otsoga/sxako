@@ -21,7 +21,11 @@ function MoveList({movesString}) {
     }
 
     return (
-        <Box sx={{minWidth: '115px'}}>
+        <Box
+            sx={{minWidth: '115px'}}
+            border={1}
+            borderColor={'yellow'}
+            >
             {movesArray.map((moveLine, index) =>
                 <Fragment key={index}>
                     <p>{moveLine.moveNumber} {moveLine.whiteMove} {moveLine.blackMove}</p>

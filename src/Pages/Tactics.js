@@ -7,18 +7,19 @@ import { getRandomElement } from '../utils';
 import MoveList from '../Components/MoveList';
 import EndOfGameModal from '../Components/EndOfGameModal';
 import PuzzleNavigation from '../Components/PuzzleNavigation';
+import ContentBox from '../Components/ContentBox';
 
 function Tactics() {
     const gameRef = useRef(new Chess('8/8/8/8/8/8/8/8'));
+    const solutionRef = useRef('');
     const [fen, setFen] = useState(gameRef.current.fen());
 
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/v1/tactics/puzzles')
           .then(response => {
+            solutionRef.current = response.data.solution
             gameRef.current = new Chess(response.data.fen);
-            // might need to do something about board orientation
             setFen(gameRef.current.fen())
-
           })
           .catch(error => {
             console.error(error);
@@ -37,29 +38,29 @@ function Tactics() {
             promotion: getRandomElement(['q', 'r', 'b', 'n'])
         })
 
+
         if (move == null) {
             return false
         }
 
         setFen(gameRef.current.fen())
-        setTimeout(makeRandomMove, 200); // Comment this out for human vs. human
-        
-        if (gameRef.current.game_over()) {
-            handleEndOfGame()
-            return;
-        }
+        setTimeout(checkSolution, 200); // Comment this out for human vs. human
 
         return true;
     }
 
-    const makeRandomMove = () =>{
-        const possibleMoves = gameRef.current.moves();
-        gameRef.current.move(getRandomElement(possibleMoves));
-        setFen(gameRef.current.fen())
-
-        if (gameRef.current.game_over()) {
-            handleEndOfGame()
-            return;
+    const checkSolution = () => {
+        console.log('human move:', gameRef.current.history().at(-1))
+        console.log('solution:', solutionRef.current)
+        let lastHumanMove = gameRef.current.history().at(-1)
+        if (lastHumanMove === solutionRef.current[0]) {
+            solutionRef.current = solutionRef.current.slice(1, solutionRef.current.length - 1)
+            console.log('comp will move', solutionRef.current[0])
+            gameRef.current.move(solutionRef.current[0]);
+            solutionRef.current = solutionRef.current.slice(1, solutionRef.current.length - 1)
+            setFen(gameRef.current.fen())
+        } else {
+            undoMove()
         }
     }
 
@@ -113,7 +114,7 @@ function Tactics() {
             />
             <h1>Tactics</h1>
             <Box sx={{ display: 'flex', gap: '1rem' }}>
-                <Box id='boardView' sx={{minWidth: '560px', width:'50%'}} >
+                <Box id='boardView' sx={{width: '560px'}} >
                     <Box sx={{marginBottom: '1rem'}}>
                         <Board 
                             position={fen}
@@ -130,6 +131,12 @@ function Tactics() {
                     />
                 </Box>
                 <MoveList movesString={gameRef.current.pgn()} />
+                <ContentBox
+                    text={''}
+                    title={'Tactics'}
+                />
+
+    
             </Box>
 
         </div>
