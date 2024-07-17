@@ -6,6 +6,8 @@ import { getRandomElement } from '../utils';
 import MoveList from '../Components/MoveList';
 import GameNavigation from '../Components/GameNavigation';
 import EndOfGameModal from '../Components/EndOfGameModal';
+import ContentBox from '../Components/ContentBox';
+import { Link } from 'react-router-dom';
 
 function PlayVsCpu() {
     const gameRef = useRef(new Chess());
@@ -101,7 +103,13 @@ function PlayVsCpu() {
                 gameOver={gameOver}
                 onClose={toggleModal} 
             />
-            <h1>Play vs. CPU</h1>
+            <Box>
+                <Link 
+                    to='/'
+                    color={'white'}
+                    underline={'none'}><h1>Ŝako</h1>
+                </Link>
+            </Box>            
             <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Box id='boardView' sx={{minWidth: '560px', width:'50%'}} >
                     <Box sx={{marginBottom: '1rem'}}>
@@ -120,6 +128,10 @@ function PlayVsCpu() {
                     />
                 </Box>
                 <MoveList movesString={gameRef.current.pgn()} />
+                <ContentBox
+                    text={''}
+                    title={'Game vs. CPU'}
+                />
             </Box>
 
         </div>

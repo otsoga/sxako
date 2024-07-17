@@ -8,11 +8,17 @@ import MoveList from '../Components/MoveList';
 import EndOfGameModal from '../Components/EndOfGameModal';
 import PuzzleNavigation from '../Components/PuzzleNavigation';
 import ContentBox from '../Components/ContentBox';
+import { Link } from 'react-router-dom';
 
 function Tactics() {
     const gameRef = useRef(new Chess('8/8/8/8/8/8/8/8'));
-    const solutionRef = useRef('');
+    const solutionRef = useRef([]);
+    const solutionIndexRef = useRef(-1);
     const [fen, setFen] = useState(gameRef.current.fen());
+    const [boardOrientation, setBoardOrientation] = useState('white');
+    const [modalOpen, setModalOpen] = useState(false);
+    const [gameOver, setGameOver] = useState(false);
+
 
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/v1/tactics/puzzles')
@@ -26,9 +32,6 @@ function Tactics() {
           });
       }, []);
 
-    const [boardOrientation, setBoardOrientation] = useState('white');
-    const [modalOpen, setModalOpen] = useState(false);
-    const [gameOver, setGameOver] = useState(false);
 
     const onHumanMove = (source, target) => {
         let move = null;
@@ -44,47 +47,65 @@ function Tactics() {
         }
 
         setFen(gameRef.current.fen())
+        solutionIndexRef.current++
         setTimeout(checkSolution, 200); // Comment this out for human vs. human
 
         return true;
     }
 
     const checkSolution = () => {
-        console.log('human move:', gameRef.current.history().at(-1))
-        console.log('solution:', solutionRef.current)
         let lastHumanMove = gameRef.current.history().at(-1)
-        if (lastHumanMove === solutionRef.current[0]) {
-            solutionRef.current = solutionRef.current.slice(1, solutionRef.current.length - 1)
-            console.log('comp will move', solutionRef.current[0])
-            gameRef.current.move(solutionRef.current[0]);
-            solutionRef.current = solutionRef.current.slice(1, solutionRef.current.length - 1)
+        console.log('human move:', lastHumanMove)
+        console.log('solutionIndex:', solutionIndexRef.current)
+        console.log('solution:', solutionRef.current[solutionIndexRef.current])
+        if (lastHumanMove === solutionRef.current[solutionIndexRef.current]) {
+            solutionIndexRef.current++
+            let computerResponse = solutionRef.current[solutionIndexRef.current]
+            if(computerResponse === '') {
+                return
+            }
+            gameRef.current.move(computerResponse);
             setFen(gameRef.current.fen())
         } else {
-            undoMove()
+            undoPly()
         }
     }
 
-    const handleEndOfGame = () => {
-        if (gameRef.current.in_checkmate()) {
-            console.log(gameRef.current.turn())
-            let winner = gameRef.current.turn() === 'w' ? 'Black' : 'White'
-            setGameOver(winner + ' wins by checkmate!')
-        } else if (gameRef.current.in_stalemate()) {   
-            setGameOver('Game drawn by stalemate!')
-        } else if (gameRef.current.in_threefold_repetition()) {
-            setGameOver('Game drawn by threefold repetition!')
-        } else if (gameRef.current.insufficient_material()) {
-            setGameOver('Game drawn by insufficient material!')
-        } else if (gameRef.current.in_draw()) {
-            setGameOver('Game drawn by fifty-move rule!')
-        }
+    // const handleEndOfGame = () => {
+    //     if (gameRef.current.in_checkmate()) {
+    //         console.log(gameRef.current.turn())
+    //         let winner = gameRef.current.turn() === 'w' ? 'Black' : 'White'
+    //         setGameOver(winner + ' wins by checkmate!')
+    //     } else if (gameRef.current.in_stalemate()) {   
+    //         setGameOver('Game drawn by stalemate!')
+    //     } else if (gameRef.current.in_threefold_repetition()) {
+    //         setGameOver('Game drawn by threefold repetition!')
+    //     } else if (gameRef.current.insufficient_material()) {
+    //         setGameOver('Game drawn by insufficient material!')
+    //     } else if (gameRef.current.in_draw()) {
+    //         setGameOver('Game drawn by fifty-move rule!')
+    //     }
 
-        toggleModal()
+    //     toggleModal()
+    // }
+
+    const undoPly = () => {
+        let undone = gameRef.current.undo()
+        console.log('solutionIndexrefBeforeUndo:', solutionIndexRef.current)
+        if (undone) {
+            solutionRef.current[solutionIndexRef.current] === '' ? solutionIndexRef.current -= 2 : solutionIndexRef.current--
+            setFen(gameRef.current.fen())
+        }
+        console.log('solutionIndex:', solutionIndexRef.current)   
+        console.log('solution:', solutionRef.current[solutionIndexRef.current])   
     }
 
     const undoMove = () => {
-        gameRef.current.undo()
-        setFen(gameRef.current.fen())
+        if (solutionRef.current[solutionIndexRef.current] !== '') { // if the last move was a computer move, undo twice
+            undoPly()
+        }
+
+        undoPly()
     }
 
     const resetGame = () => {
@@ -112,7 +133,13 @@ function Tactics() {
                 gameOver={gameOver}
                 onClose={toggleModal} 
             />
-            <h1>Tactics</h1>
+            <Box>
+                <Link 
+                    to='/'
+                    color={'white'}
+                    underline={'none'}><h1>Ŝako</h1>
+                </Link>
+            </Box>
             <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Box id='boardView' sx={{width: '560px'}} >
                     <Box sx={{marginBottom: '1rem'}}>

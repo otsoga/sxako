@@ -7,6 +7,7 @@ function ContentBox({title, text}) {
         padding={'1rem'}
         width={'100%'}
         backgroundColor={'#222222'}>
+        <h2>{title}</h2>
         <p>{text}</p>
     </Box>
     );
