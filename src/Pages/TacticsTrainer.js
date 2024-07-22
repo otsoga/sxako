@@ -140,11 +140,11 @@ function TacticsTrainer() {
 
     return (
         <div className='app'>
-            <EndOfGameModal
+            {/* <EndOfGameModal
                 open={modalOpen}
                 gameOver={gameOver}
                 onClose={toggleModal} 
-            />
+            /> */}
             <Box>
                 <Link 
                     to='/'
