@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Endgames from './Pages/Endgames';
 import Home from './Pages/Home';
 import Openings from './Pages/Openings';
-import Tactics from './Pages/Tactics';
+import TacticsTrainer from './Pages/TacticsTrainer';
 import PlayVsCpu from './Pages/PlayVsCpu';
 
 
@@ -14,7 +14,7 @@ function App() {
             <Route exact path="/endgames" element={<Endgames />}/>
             <Route exact path="/openings" element={<Openings />}/>
             <Route exact path="/play-vs-cpu" element={<PlayVsCpu />}/>
-            <Route exact path="/tactics" element={<Tactics />}/>
+            <Route exact path="/tactics-trainer" element={<TacticsTrainer />}/>
         </Routes>
     );
 }

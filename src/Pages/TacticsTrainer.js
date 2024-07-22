@@ -10,28 +10,38 @@ import PuzzleNavigation from '../Components/PuzzleNavigation';
 import ContentBox from '../Components/ContentBox';
 import { Link } from 'react-router-dom';
 
-function Tactics() {
+function TacticsTrainer() {
     const gameRef = useRef(new Chess('8/8/8/8/8/8/8/8'));
     const solutionRef = useRef([]);
     const solutionIndexRef = useRef(-1);
+    const [text, setText] = useState('');
     const [fen, setFen] = useState(gameRef.current.fen());
     const [boardOrientation, setBoardOrientation] = useState('white');
     const [modalOpen, setModalOpen] = useState(false);
-    const [gameOver, setGameOver] = useState(false);
-
+    // const [gameOver, setGameOver] = useState(false);
+    const [fetchNextPuzzle, setFetchNextPuzzle] = useState(false);
+    const setFenToCurrent = () => setFen(gameRef.current.fen())
+    const setNewPuzzle = () => {
+        setBoardOrientation(getCurrentTurn())
+        setFenToCurrent()
+        setText('')
+    }
 
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/v1/tactics/puzzles')
           .then(response => {
             solutionRef.current = response.data.solution
+            solutionIndexRef.current = -1
             gameRef.current = new Chess(response.data.fen);
-            setFen(gameRef.current.fen())
+            setNewPuzzle()
+            setFetchNextPuzzle(false)
           })
           .catch(error => {
             console.error(error);
           });
-      }, []);
+      }, [fetchNextPuzzle]);
 
+    const getCurrentTurn = () => gameRef.current.turn() === 'w' ? 'white' : 'black'
 
     const onHumanMove = (source, target) => {
         let move = null;
@@ -41,12 +51,11 @@ function Tactics() {
             promotion: getRandomElement(['q', 'r', 'b', 'n'])
         })
 
-
         if (move == null) {
             return false
         }
 
-        setFen(gameRef.current.fen())
+        setFenToCurrent()
         solutionIndexRef.current++
         setTimeout(checkSolution, 200); // Comment this out for human vs. human
 
@@ -55,21 +64,25 @@ function Tactics() {
 
     const checkSolution = () => {
         let lastHumanMove = gameRef.current.history().at(-1)
-        console.log('human move:', lastHumanMove)
-        console.log('solutionIndex:', solutionIndexRef.current)
-        console.log('solution:', solutionRef.current[solutionIndexRef.current])
         if (lastHumanMove === solutionRef.current[solutionIndexRef.current]) {
             solutionIndexRef.current++
             let computerResponse = solutionRef.current[solutionIndexRef.current]
-            if(computerResponse === '') {
+            if (computerResponse === '') {
+                    setText('Correct! You solved the puzzle!')
                 return
             }
             gameRef.current.move(computerResponse);
-            setFen(gameRef.current.fen())
+            setText('Correct! Find the next move.')
+
+            setFenToCurrent()
         } else {
             undoPly()
+            const elipsis = getCurrentTurn === 'black' ? '...' : '...'
+            setText(elipsis + lastHumanMove + ' is ncorrect! Try again!')
         }
     }
+
+    const getNextPuzzle = () => setFetchNextPuzzle(true)
 
     // const handleEndOfGame = () => {
     //     if (gameRef.current.in_checkmate()) {
@@ -91,18 +104,17 @@ function Tactics() {
 
     const undoPly = () => {
         let undone = gameRef.current.undo()
-        console.log('solutionIndexrefBeforeUndo:', solutionIndexRef.current)
         if (undone) {
             solutionRef.current[solutionIndexRef.current] === '' ? solutionIndexRef.current -= 2 : solutionIndexRef.current--
-            setFen(gameRef.current.fen())
+            setFenToCurrent()
         }
-        console.log('solutionIndex:', solutionIndexRef.current)   
-        console.log('solution:', solutionRef.current[solutionIndexRef.current])   
     }
 
     const undoMove = () => {
         if (solutionRef.current[solutionIndexRef.current] !== '') { // if the last move was a computer move, undo twice
             undoPly()
+            setTimeout(undoPly, 500)
+            return
         }
 
         undoPly()
@@ -155,19 +167,18 @@ function Tactics() {
                         onFlipBoard={flipBoard}
                         onCopyFen={copyFen}
                         onToggleModal={toggleModal}
+                        onNextPuzzle={getNextPuzzle}
                     />
                 </Box>
                 <MoveList movesString={gameRef.current.pgn()} />
                 <ContentBox
-                    text={''}
+                    text={text}
                     title={'Tactics'}
                 />
-
-    
             </Box>
 
         </div>
     );
 }
 
-export default Tactics;
+export default TacticsTrainer;

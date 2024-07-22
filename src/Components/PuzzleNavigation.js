@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import GameNavigationButton from './GameNavigationButton';
 
-function PuzzleNavigation({onUndoMove, onResetGame, onFlipBoard, onCopyFen, onToggleModal}) {
+function PuzzleNavigation({onUndoMove, onResetGame, onFlipBoard, onCopyFen, onToggleModal, onNextPuzzle}) {
 
     return (
         <Box>
@@ -32,6 +32,10 @@ function PuzzleNavigation({onUndoMove, onResetGame, onFlipBoard, onCopyFen, onTo
             <GameNavigationButton
                 text={'Toggle Modal'}
                 onClick={onToggleModal}>
+            </GameNavigationButton>
+            <GameNavigationButton
+                text={'Next Puzzle'}
+                onClick={onNextPuzzle}>
             </GameNavigationButton>
         </Box>
     );
