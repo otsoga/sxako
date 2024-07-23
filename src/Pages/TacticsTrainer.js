@@ -5,10 +5,11 @@ import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { getRandomElement } from '../utils';
 import MoveList from '../Components/MoveList';
-import EndOfGameModal from '../Components/EndOfGameModal';
+// import EndOfGameModal from '../Components/EndOfGameModal';
 import PuzzleNavigation from '../Components/PuzzleNavigation';
 import ContentBox from '../Components/ContentBox';
 import { Link } from 'react-router-dom';
+import moveSound from '../assets/move.wav';
 
 function TacticsTrainer() {
     const gameRef = useRef(new Chess('8/8/8/8/8/8/8/8'));
@@ -26,6 +27,11 @@ function TacticsTrainer() {
         setFenToCurrent()
         setText('')
     }
+    const sound = new Audio(moveSound);
+
+    const playMoveSound = () => {
+        sound.play()
+    };
 
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/v1/tactics/puzzles')
@@ -41,9 +47,13 @@ function TacticsTrainer() {
           });
       }, [fetchNextPuzzle]);
 
+      useEffect(() => {
+        }, [])
+
     const getCurrentTurn = () => gameRef.current.turn() === 'w' ? 'white' : 'black'
 
     const onHumanMove = (source, target) => {
+        playMoveSound()
         let move = null;
         move = gameRef.current.move({
             from: source,
@@ -83,24 +93,6 @@ function TacticsTrainer() {
     }
 
     const getNextPuzzle = () => setFetchNextPuzzle(true)
-
-    // const handleEndOfGame = () => {
-    //     if (gameRef.current.in_checkmate()) {
-    //         console.log(gameRef.current.turn())
-    //         let winner = gameRef.current.turn() === 'w' ? 'Black' : 'White'
-    //         setGameOver(winner + ' wins by checkmate!')
-    //     } else if (gameRef.current.in_stalemate()) {   
-    //         setGameOver('Game drawn by stalemate!')
-    //     } else if (gameRef.current.in_threefold_repetition()) {
-    //         setGameOver('Game drawn by threefold repetition!')
-    //     } else if (gameRef.current.insufficient_material()) {
-    //         setGameOver('Game drawn by insufficient material!')
-    //     } else if (gameRef.current.in_draw()) {
-    //         setGameOver('Game drawn by fifty-move rule!')
-    //     }
-
-    //     toggleModal()
-    // }
 
     const undoPly = () => {
         let undone = gameRef.current.undo()
