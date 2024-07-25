@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { getRandomElement } from '../utils';
 import MoveList from '../Components/MoveList';
-// import EndOfGameModal from '../Components/EndOfGameModal';
+import PawnPromotionModal from '../Components/PawnPromotionModal';
 import PuzzleNavigation from '../Components/PuzzleNavigation';
 import ContentBox from '../Components/ContentBox';
 import { Link } from 'react-router-dom';
@@ -15,11 +15,11 @@ function TacticsTrainer() {
     const gameRef = useRef(new Chess('8/8/8/8/8/8/8/8'));
     const solutionRef = useRef([]);
     const solutionIndexRef = useRef(-1);
+    const nextPuzzleIdRef = useRef(0);
+    const [pawnPromotionModalOpen, setPawnPromotionModalOpen] = useState(false);
     const [text, setText] = useState('');
     const [fen, setFen] = useState(gameRef.current.fen());
     const [boardOrientation, setBoardOrientation] = useState('white');
-    const [modalOpen, setModalOpen] = useState(false);
-    // const [gameOver, setGameOver] = useState(false);
     const [fetchNextPuzzle, setFetchNextPuzzle] = useState(false);
     const setFenToCurrent = () => setFen(gameRef.current.fen())
     const setNewPuzzle = () => {
@@ -34,11 +34,16 @@ function TacticsTrainer() {
     };
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/v1/tactics/puzzles')
+        axios.get('http://127.0.0.1:8000/api/v1/tactics/puzzles', {
+            params: {
+              id: nextPuzzleIdRef.current
+            }
+        })
           .then(response => {
             solutionRef.current = response.data.solution
             solutionIndexRef.current = -1
             gameRef.current = new Chess(response.data.fen);
+            nextPuzzleIdRef.current = response.data.next
             setNewPuzzle()
             setFetchNextPuzzle(false)
           })
@@ -92,8 +97,14 @@ function TacticsTrainer() {
         }
     }
 
-    const getNextPuzzle = () => setFetchNextPuzzle(true)
+    const getNextPuzzle = () => {
+        if (nextPuzzleIdRef.current === -1) {
+            setText('All puzzles completed!')
+            return
+        }
 
+        setFetchNextPuzzle(true)
+    }
     const undoPly = () => {
         let undone = gameRef.current.undo()
         if (undone) {
@@ -127,16 +138,15 @@ function TacticsTrainer() {
 
     const toggleModal = () => {
         console.log('trying to toggle modal')
-        setModalOpen(!modalOpen)
+        setPawnPromotionModalOpen(!pawnPromotionModalOpen)
     }
 
     return (
         <div className='app'>
-            {/* <EndOfGameModal
-                open={modalOpen}
-                gameOver={gameOver}
+            <PawnPromotionModal
+                open={pawnPromotionModalOpen}
                 onClose={toggleModal} 
-            /> */}
+            />
             <Box>
                 <Link 
                     to='/'
