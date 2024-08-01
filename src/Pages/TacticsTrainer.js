@@ -79,8 +79,10 @@ function TacticsTrainer() {
 
     const checkSolution = () => {
         let lastHumanMove = gameRef.current.history().at(-1)
+        console.log('solution is', solutionRef.current[solutionIndexRef.current])
         if (lastHumanMove === solutionRef.current[solutionIndexRef.current]) {
             solutionIndexRef.current++
+
             let computerResponse = solutionRef.current[solutionIndexRef.current]
             if (computerResponse === '') {
                     setText('Correct! You solved the puzzle!')
@@ -93,7 +95,7 @@ function TacticsTrainer() {
         } else {
             undoPly()
             const elipsis = getCurrentTurn === 'black' ? '...' : '...'
-            setText(elipsis + lastHumanMove + ' is ncorrect! Try again!')
+            setText(elipsis + lastHumanMove + ' is incorrect! Try again!')
         }
     }
 
