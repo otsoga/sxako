@@ -9,7 +9,6 @@ import ContentBox from '../Components/ContentBox';
 import TopBar from '../Components/TopBar';
 import moveSound from '../assets/move.wav';
 
-
 function TacticsTrainer() {
     const gameRef = useRef(new Chess('8/8/8/8/8/8/8/8'));
     const solutionRef = useRef([]);

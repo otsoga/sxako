@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 function TopBar() {
-
     return (
         <Box>
         <Link 
@@ -12,12 +11,6 @@ function TopBar() {
         </Link>
         </Box>   
     );
-
-    // return (
-    //     <Box component={Link} to='/' color='white'>
-    //         <h1 textDecoration='none'>Ŝako</h1>
-    //     </Box>   
-    // );
 }
 
 export default TopBar;
