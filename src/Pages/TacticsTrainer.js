@@ -1,22 +1,20 @@
 import { Box } from '@mui/material';
-import Board from '../Components/Board';
 import { Chess } from 'chess.js'
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { getRandomElement } from '../utils';
+import Board from '../Components/Board';
 import MoveList from '../Components/MoveList';
-import PawnPromotionModal from '../Components/PawnPromotionModal';
 import PuzzleNavigation from '../Components/PuzzleNavigation';
 import ContentBox from '../Components/ContentBox';
-import { Link } from 'react-router-dom';
+import TopBar from '../Components/TopBar';
 import moveSound from '../assets/move.wav';
+
 
 function TacticsTrainer() {
     const gameRef = useRef(new Chess('8/8/8/8/8/8/8/8'));
     const solutionRef = useRef([]);
     const solutionIndexRef = useRef(-1);
     const nextPuzzleIdRef = useRef(0);
-    const [pawnPromotionModalOpen, setPawnPromotionModalOpen] = useState(false);
     const [text, setText] = useState('');
     const [fen, setFen] = useState(gameRef.current.fen());
     const [boardOrientation, setBoardOrientation] = useState('white');
@@ -57,13 +55,13 @@ function TacticsTrainer() {
 
     const getCurrentTurn = () => gameRef.current.turn() === 'w' ? 'white' : 'black'
 
-    const onHumanMove = (source, target) => {
+    const onHumanMove = (source, target, promotion) => {
         playMoveSound()
         let move = null;
         move = gameRef.current.move({
             from: source,
             to: target,
-            promotion: getRandomElement(['q', 'r', 'b', 'n'])
+            promotion: promotion.at(-1).toLowerCase()
         })
 
         if (move == null) {
@@ -140,24 +138,13 @@ function TacticsTrainer() {
 
     const toggleModal = () => {
         console.log('trying to toggle modal')
-        setPawnPromotionModalOpen(!pawnPromotionModalOpen)
     }
 
     return (
-        <div className='app'>
-            <PawnPromotionModal
-                open={pawnPromotionModalOpen}
-                onClose={toggleModal} 
-            />
-            <Box>
-                <Link 
-                    to='/'
-                    color={'white'}
-                    underline={'none'}><h1>Ŝako</h1>
-                </Link>
-            </Box>
+        <Box className='app'>
+            <TopBar /> 
             <Box sx={{ display: 'flex', gap: '1rem' }}>
-                <Box id='boardView' sx={{width: '560px'}} >
+                <Box id='boardView' sx={{minWidth: '560px'}} >
                     <Box sx={{marginBottom: '1rem'}}>
                         <Board 
                             position={fen}
@@ -180,8 +167,7 @@ function TacticsTrainer() {
                     title={'Tactics'}
                 />
             </Box>
-
-        </div>
+        </Box>
     );
 }
 

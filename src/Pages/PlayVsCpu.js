@@ -7,26 +7,21 @@ import MoveList from '../Components/MoveList';
 import GameNavigation from '../Components/GameNavigation';
 import EndOfGameModal from '../Components/EndOfGameModal';
 import ContentBox from '../Components/ContentBox';
-import { Link } from 'react-router-dom';
+import TopBar from '../Components/TopBar';
 
 function PlayVsCpu() {
     const gameRef = useRef(new Chess());
-    // const gameRef = useRef(new Chess('7k/8/8/8/5Q2/4P3/PPPP1PPP/RNB1KBNR w KQ - 5 4')); // For testing checkmate
-    // const gameRef = useRef(new Chess('7k/8/8/8/5Q2/4P3/PPPP1PPP/RNB1KBNR w KQ - 5 4')); // For testing stalemate
-    // const gameRef = useRef(new Chess('7k/8/8/8/8/8/8/4KBN1 w KQ - 5 4')); // For testing insufficient material
-
-
     const [fen, setFen] = useState(gameRef.current.fen());
     const [boardOrientation, setBoardOrientation] = useState('white');
     const [modalOpen, setModalOpen] = useState(false);
     const [gameOver, setGameOver] = useState(false);
 
-    const onHumanMove = (source, target) => {
+    const onHumanMove = (source, target, promotion) => {
         let move = null;
         move = gameRef.current.move({
             from: source,
             to: target,
-            promotion: getRandomElement(['q', 'r', 'b', 'n'])
+            promotion: promotion.at(-1).toLowerCase()
         })
 
         if (move == null) {
@@ -103,13 +98,7 @@ function PlayVsCpu() {
                 gameOver={gameOver}
                 onClose={toggleModal} 
             />
-            <Box>
-                <Link 
-                    to='/'
-                    color={'white'}
-                    underline={'none'}><h1>Ŝako</h1>
-                </Link>
-            </Box>            
+            <TopBar />           
             <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Box id='boardView' sx={{minWidth: '560px', width:'50%'}} >
                     <Box sx={{marginBottom: '1rem'}}>

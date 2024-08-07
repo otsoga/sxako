@@ -37,3 +37,8 @@ body {
   margin-bottom: 3rem;
   color: red;
 }
+
+#logo {
+  color: white;
+  text-decoration: none;
+}
